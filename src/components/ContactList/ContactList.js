@@ -1,27 +1,22 @@
-// import { deleteContact } from 'redux/actions-contacts';
+import { useFetchContactsQuery } from 'services/api';
 import { useSelector } from 'react-redux';
+import { getFilter } from 'services/selectors';
 import ContactListItem from '../ContactListItem/ContactListItem';
 
 const ContactList = () => {
-    const contacts = useSelector(state => state.contacts.items);
-    const filter = useSelector(state => state.contacts.filter);
+    const filterValue = useSelector(getFilter);
+    const { data: contacts, isLoading } = useFetchContactsQuery();
 
-    const contactsFilter = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase())
+    const renderContactsList = contacts?.filter(({ name }) =>
+        name.toLowerCase().includes(filterValue.toLowerCase())
     );
-    // const onDelete = id => {
-    //     dispatch(deleteContact(id));
-    // }
 
     return (
         <ul>
-            {contactsFilter.map(({ id, name, number }) => {
-                return (
-            <ContactListItem
-                contact={{ id, name, number }}
-                key={id}
-            />
-            );
-            })}
+            {isLoading && <p>Loading...</p>}
+            {renderContactsList && renderContactsList.map(({id, name, phone}) => (
+                <ContactListItem key={id} id={id} name={name} phone={phone} />
+            ))}
         </ul>
     );
 };

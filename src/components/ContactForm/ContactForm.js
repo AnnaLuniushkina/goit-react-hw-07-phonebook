@@ -1,23 +1,22 @@
-import {useState} from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from 'react'; 
+import { useCreateContactMutation, useFetchContactsQuery } from 'services/api';
 import styles from './ContactForm.module.css';
-import { addContact } from "redux/actions-contacts";
 
 function ContactForm() {
-    const [name, setName] = useState('');
-    const [number, setNumber] = useState('');
+    const  [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
 
-    const contacts = useSelector(state => state.contacts.items);
-    const dispatch = useDispatch();
+    const [addContact] = useCreateContactMutation();
+    const { data } = useFetchContactsQuery();
 
-    const handleChange = event => {        
+    const handleChange = event => {  
         switch (event.target.name) {
             case 'name':
                 setName(event.target.value);
                 break;
 
-            case 'number':
-                setNumber(event.target.value);
+            case 'phone':
+                setPhone(event.target.value);
                 break;
             
             default:
@@ -29,20 +28,20 @@ function ContactForm() {
         event.preventDefault();
 
         if (
-            contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())) {
-            return alert(`${name} is already in contact`);
-        } else if (contacts.find(contact => contact.number === number)) {
-            return alert(`${number} is already in contact`);
+            data?.find(contact => contact.name.toLowerCase() === name.toLowerCase())) {
+            alert(`${name} is already in contact`);
+        } else if (data.find(contact => contact.phone === phone)) {
+            alert(`${phone} is already in contact`);
+        } else {
+            addContact({ name, phone });
         }
 
-        dispatch(addContact({ name, number }));
-
         setName('');
-        setNumber('');
+        setPhone('');
+
     };
 
     return (
-        <>
             <form
                 className={styles.contactForm}
                 onSubmit={handleSubmit}>
@@ -65,10 +64,10 @@ function ContactForm() {
                         Number
                         <input
                             className={styles.contactForm__input}
-                            value={number}
+                            value={phone}
                             onChange={handleChange}
                             type="tel"
-                            name="number"
+                            name="phone"
                             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
                             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                             required
@@ -77,7 +76,6 @@ function ContactForm() {
         
                     <button type="submit" className={styles.contactForm__button}>Add contact</button>
                 </form>
-            </>
         );
 };
 
