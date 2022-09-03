@@ -1,4 +1,4 @@
-import { changeFilter } from 'services/filterSlice';
+import { changeFilter } from 'redux/filterSlice';
 import { getFilter } from 'services/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';

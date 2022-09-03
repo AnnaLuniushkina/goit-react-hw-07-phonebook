@@ -1,4 +1,4 @@
-import { useDeleteContactMutation } from 'services/api';
+import { useDeleteContactMutation } from 'redux/api';
 import styles from './ContactListItem.module.css';
 
 const ContactListItem = ({ id, name, phone }) => {

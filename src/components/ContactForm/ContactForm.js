@@ -1,12 +1,12 @@
 import { useState } from 'react'; 
-import { useCreateContactMutation, useFetchContactsQuery } from 'services/api';
+import { useCreateContactMutation, useFetchContactsQuery } from 'redux/api';
 import styles from './ContactForm.module.css';
 
 function ContactForm() {
     const  [name, setName] = useState('');
     const [phone, setPhone] = useState('');
 
-    const [addContact] = useCreateContactMutation();
+    const [createContact] = useCreateContactMutation();
     const { data } = useFetchContactsQuery();
 
     const handleChange = event => {  
@@ -33,7 +33,7 @@ function ContactForm() {
         } else if (data.find(contact => contact.phone === phone)) {
             alert(`${phone} is already in contact`);
         } else {
-            addContact({ name, phone });
+            createContact({ name, phone });
         }
 
         setName('');
